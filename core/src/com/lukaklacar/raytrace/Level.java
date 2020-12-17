@@ -18,11 +18,15 @@ public class Level {
             new PlaneEntity(new Vector3(0, 1, 0), new Vector3(0, -25, 0), Color.RED));
     }
 
-    public Optional<AbstractEntity> getIntersectedEntity(final Ray ray) {
-        return entities
-            .stream()
-            .filter(entity -> entity.intersect(ray).isIntersects())
-            .findFirst();
+    public Optional<LevelIntersectionResult> getIntersectedEntity(final Ray ray) {
+        for(var entity : entities) {
+            var intersectionResult = entity.intersect(ray);
+            if(intersectionResult.isIntersects()) {
+                return Optional.of(new LevelIntersectionResult(entity, intersectionResult.getIntersectionPoint()));
+            }
+        }
+
+        return Optional.empty();
     }
 
 }

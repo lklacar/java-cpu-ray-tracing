@@ -17,6 +17,7 @@ public class Renderer {
     private final Vector3 rotationAxis = new Vector3(0, 1, 0);
     private float currentCameraRotation = 0f;
     private final Texture renderTexture;
+    private static final int BOUNCE_COUNT = 1;
 
     public Renderer(int width, int height, Level level) {
         this.width = width;
@@ -35,18 +36,22 @@ public class Renderer {
                 ray.direction.set(width / 2f - i, height / 2f - j, 500);
                 ray.direction.set(ray.direction.nor());
                 ray.direction.rotate(rotationAxis, currentCameraRotation);
-                var intersectedEntity = level.getIntersectedEntity(ray);
 
-                var renderColor = intersectedEntity
-                    .map(AbstractEntity::getColor)
-                    .orElse(Color.BLACK);
+                level.getIntersectedEntity(ray)
+                    .ifPresentOrElse(levelIntersectionResult -> {
+                        pixmap.setColor(levelIntersectionResult.getIntersectionEntity().getColor());
+                    }, () -> pixmap.setColor(Color.BLACK));
 
-                pixmap.setColor(renderColor);
                 pixmap.drawPixel(i, j);
+
             }
         }
         renderTexture.draw(pixmap, 0, 0);
         spriteBatch.draw(renderTexture, 0, 0);
+    }
+
+    private Vector3 calculateBounce(Ray ray, Vector3 intersectionPoint) {
+        return null;
     }
 
 }
