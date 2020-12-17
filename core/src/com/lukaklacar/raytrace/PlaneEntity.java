@@ -21,4 +21,10 @@ public class PlaneEntity extends AbstractEntity {
         return new IntersectionResult(intersects, intersectionPoint);
     }
 
+    @Override
+    public Ray bounce(Ray ray, Vector3 intersectionPoint) {
+        return new Ray(intersectionPoint, plane.normal.cpy().scl(2).sub(ray.direction));
+
+    }
+
 }

@@ -21,4 +21,14 @@ public class SphereEntity extends AbstractEntity {
         boolean intersects = Intersector.intersectRaySphere(ray, sphere.center, sphere.radius, intersectionPoint);
         return new IntersectionResult(intersects, intersectionPoint);
     }
+
+    @Override
+    public Ray bounce(Ray ray, Vector3 intersectionPoint) {
+        var normal = intersectionPoint.cpy().sub(sphere.center).scl(2);
+        return new Ray(intersectionPoint, normal.sub(ray.direction));
+    }
+
+    public Sphere getSphere() {
+        return sphere;
+    }
 }

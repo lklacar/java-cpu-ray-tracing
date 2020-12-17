@@ -29,7 +29,10 @@ public class Renderer {
     }
 
     public void render(SpriteBatch spriteBatch) {
-        currentCameraRotation += 1f;
+        currentCameraRotation += 0.1f;
+
+        ((SphereEntity)level.getEntities().get(0)).getSphere().center.z -= 0.1f;
+        ((SphereEntity)level.getEntities().get(1)).getSphere().center.x -= 0.1f;
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -41,7 +44,28 @@ public class Renderer {
 
                 if (levelIntersectionResult != null) {
                     var intersectedEntity = levelIntersectionResult.getIntersectionEntity();
-                    pixmap.setColor(intersectedEntity.getColor());
+
+                    var bounceRay = intersectedEntity.bounce(ray, levelIntersectionResult.getIntersectionPoint());
+
+                    if (bounceRay != null) {
+                        var bounceLevelIntersectionResult = level.getIntersectedEntity(bounceRay);
+
+                        if (bounceLevelIntersectionResult != null) {
+                            var originalColor = levelIntersectionResult.getIntersectionEntity().getColor();
+                            var reflectionColor = bounceLevelIntersectionResult.getIntersectionEntity().getColor();
+                            var newColor = new Color(
+                                originalColor.r * 0.6f + reflectionColor.r * 0.4f,
+                                originalColor.g * 0.6f + reflectionColor.g * 0.4f,
+                                originalColor.b * 0.6f + reflectionColor.b * 0.4f,
+                                1f
+                            );
+                            pixmap.setColor(newColor);
+                        } else {
+                            pixmap.setColor(intersectedEntity.getColor());
+                        }
+                    } else {
+                        pixmap.setColor(intersectedEntity.getColor());
+                    }
                 } else {
                     pixmap.setColor(Color.BLACK);
                 }

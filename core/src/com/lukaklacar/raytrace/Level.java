@@ -13,8 +13,11 @@ public class Level {
 
     public Level() {
         entities = Arrays.asList(
-            new SphereEntity(new Vector3(50, 0, 50), 10, Color.WHITE),
-            new PlaneEntity(new Vector3(0, 1, 0), new Vector3(0, -25, 0), Color.RED));
+            new SphereEntity(new Vector3(50, -10, 50), 10, Color.GREEN),
+            new SphereEntity(new Vector3(80, -10, 60), 10, Color.BLUE),
+            new SphereEntity(new Vector3(110, -10, 55), 10, Color.BROWN),
+            new PlaneEntity(new Vector3(0, 1, 0), new Vector3(0, -25, 0), Color.RED)
+                                );
     }
 
     public LevelIntersectionResult getIntersectedEntity(final Ray ray) {
@@ -28,4 +31,7 @@ public class Level {
         return null;
     }
 
+    public List<AbstractEntity> getEntities() {
+        return entities;
+    }
 }
