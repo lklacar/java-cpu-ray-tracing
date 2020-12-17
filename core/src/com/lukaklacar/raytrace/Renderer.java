@@ -1,5 +1,6 @@
 package com.lukaklacar.raytrace;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,6 +16,8 @@ public class Renderer {
     private final Level level;
     private final Pixmap pixmap;
     private final Vector3 rotationAxis = new Vector3(0, 1, 0);
+    private float currentCameraRotation = 0f;
+    private final Texture renderTexture;
 
     public Renderer(int width, int height, Level level) {
         this.width = width;
@@ -22,17 +25,18 @@ public class Renderer {
         this.level = level;
         ray = new Ray();
         pixmap = new Pixmap(width, height, Pixmap.Format.RGB888);
+        renderTexture = new Texture(pixmap);
     }
 
-    float rotation = 0f;
 
     public void render(SpriteBatch spriteBatch) {
-        rotation += 1;
+        currentCameraRotation += 1f;
+
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 ray.direction.set(width / 2f - i, height / 2f - j, 500);
                 ray.direction.set(ray.direction.nor());
-                ray.direction.rotate(rotationAxis, rotation);
+                ray.direction.rotate(rotationAxis, currentCameraRotation);
                 var intersectedEntity = level.getIntersectedEntity(ray);
 
                 var renderColor = intersectedEntity
@@ -43,8 +47,8 @@ public class Renderer {
                 pixmap.drawPixel(i, j);
             }
         }
-
-        spriteBatch.draw(new Texture(pixmap), 0, 0);
+        renderTexture.draw(pixmap, 0, 0);
+        spriteBatch.draw(renderTexture, 0, 0);
     }
 
 }
