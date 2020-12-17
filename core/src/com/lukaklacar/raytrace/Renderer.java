@@ -37,10 +37,14 @@ public class Renderer {
                 ray.direction.set(ray.direction.nor());
                 ray.direction.rotate(rotationAxis, currentCameraRotation);
 
-                level.getIntersectedEntity(ray)
-                    .ifPresentOrElse(levelIntersectionResult -> {
-                        pixmap.setColor(levelIntersectionResult.getIntersectionEntity().getColor());
-                    }, () -> pixmap.setColor(Color.BLACK));
+                var levelIntersectionResult = level.getIntersectedEntity(ray);
+
+                if (levelIntersectionResult != null) {
+                    var intersectedEntity = levelIntersectionResult.getIntersectionEntity();
+                    pixmap.setColor(intersectedEntity.getColor());
+                } else {
+                    pixmap.setColor(Color.BLACK);
+                }
 
                 pixmap.drawPixel(i, j);
 

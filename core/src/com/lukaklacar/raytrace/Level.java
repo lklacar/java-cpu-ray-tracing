@@ -2,7 +2,6 @@ package com.lukaklacar.raytrace;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
@@ -18,15 +17,15 @@ public class Level {
             new PlaneEntity(new Vector3(0, 1, 0), new Vector3(0, -25, 0), Color.RED));
     }
 
-    public Optional<LevelIntersectionResult> getIntersectedEntity(final Ray ray) {
-        for(var entity : entities) {
+    public LevelIntersectionResult getIntersectedEntity(final Ray ray) {
+        for (var entity : entities) {
             var intersectionResult = entity.intersect(ray);
-            if(intersectionResult.isIntersects()) {
-                return Optional.of(new LevelIntersectionResult(entity, intersectionResult.getIntersectionPoint()));
+            if (intersectionResult.isIntersects()) {
+                return new LevelIntersectionResult(entity, intersectionResult.getIntersectionPoint());
             }
         }
 
-        return Optional.empty();
+        return null;
     }
 
 }
