@@ -1,6 +1,5 @@
 package com.lukaklacar.raytrace;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,11 +22,10 @@ public class Renderer {
         this.width = width;
         this.height = height;
         this.level = level;
-        ray = new Ray();
+        ray = new Ray(new Vector3(50, 0, 0), new Vector3(0, 0, 0));
         pixmap = new Pixmap(width, height, Pixmap.Format.RGB888);
         renderTexture = new Texture(pixmap);
     }
-
 
     public void render(SpriteBatch spriteBatch) {
         currentCameraRotation += 1f;
