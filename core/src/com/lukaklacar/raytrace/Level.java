@@ -10,8 +10,10 @@ import com.badlogic.gdx.math.collision.Ray;
 public class Level {
 
     private final List<AbstractEntity> entities;
+    private final Vector3 lightSource;
 
     public Level() {
+        lightSource = new Vector3(100, 100, 100);
         entities = Arrays.asList(
             new SphereEntity(new Vector3(50, -10, 50), 10, Color.GREEN),
             new SphereEntity(new Vector3(80, -10, 60), 10, Color.BLUE),
@@ -33,5 +35,9 @@ public class Level {
 
     public List<AbstractEntity> getEntities() {
         return entities;
+    }
+
+    public Vector3 getLightSource() {
+        return lightSource;
     }
 }

@@ -31,8 +31,10 @@ public class Renderer {
     public void render(SpriteBatch spriteBatch) {
         currentCameraRotation += 0.1f;
 
-        ((SphereEntity)level.getEntities().get(0)).getSphere().center.z -= 0.1f;
-        ((SphereEntity)level.getEntities().get(1)).getSphere().center.x -= 0.1f;
+        ((SphereEntity) level.getEntities().get(0)).getSphere().center.z -= 0.1f;
+        ((SphereEntity) level.getEntities().get(1)).getSphere().center.x -= 0.1f;
+
+        level.getLightSource().x++;
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -61,7 +63,27 @@ public class Renderer {
                             );
                             pixmap.setColor(newColor);
                         } else {
-                            pixmap.setColor(intersectedEntity.getColor());
+                            if (levelIntersectionResult.getIntersectionEntity() instanceof SphereEntity) {
+                                var s = ((SphereEntity) levelIntersectionResult.getIntersectionEntity()).getSphere();
+                                var a = levelIntersectionResult.getIntersectionPoint().cpy().sub(s.center);
+                                var b = level.getLightSource().cpy()
+                                    .sub(levelIntersectionResult.getIntersectionPoint());
+
+                                var c = 1- a.dot(b) / (a.len() * b.len());
+                                var k = (float)Math.toDegrees(Math.acos(c)) / 90f;
+
+
+                                pixmap.setColor(
+                                    intersectedEntity.getColor().r * k,
+                                    intersectedEntity.getColor().g * k,
+                                    intersectedEntity.getColor().b * k,
+                                    1f
+                                               );
+
+                            } else {
+                                pixmap.setColor(intersectedEntity.getColor());
+                            }
+
                         }
                     } else {
                         pixmap.setColor(intersectedEntity.getColor());
