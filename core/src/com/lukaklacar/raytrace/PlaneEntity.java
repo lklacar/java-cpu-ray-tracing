@@ -24,6 +24,11 @@ public class PlaneEntity extends AbstractEntity {
     public IntersectionResult intersect(Ray ray) {
         Vector3 intersectionPoint = new Vector3(0, 0, 0);
         boolean intersects = Intersector.intersectRayPlane(ray, plane, intersectionPoint);
+
+        if(intersects && ray.origin.dst(intersectionPoint) > 100) {
+            return new IntersectionResult(false, null);
+        }
+
         return new IntersectionResult(intersects, intersectionPoint);
     }
 
@@ -40,7 +45,6 @@ public class PlaneEntity extends AbstractEntity {
 
     @Override
     public Color getColorAtPosition(Vector3 point) {
-
         return color;
     }
 
