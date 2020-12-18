@@ -23,7 +23,7 @@ public class Level {
             new SphereEntity(new Vector3(0, 10, 50), 10, Color.BLUE),
             new SphereEntity(new Vector3(30, 10, 60), 10, Color.GREEN),
             new SphereEntity(new Vector3(50, 10, 50), 10, Color.GOLD),
-            new PlaneEntity(new Vector3(0, 1, 0), new Vector3(0, -5, 0), Color.RED)
+            new PlaneEntity(new Vector3(0, 1, 0), new Vector3(0, -5, 0), Color.LIGHT_GRAY, Color.DARK_GRAY)
                                 );
     }
 

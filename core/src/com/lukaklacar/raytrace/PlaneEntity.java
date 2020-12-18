@@ -13,10 +13,12 @@ public class PlaneEntity extends AbstractEntity {
 
     private final Plane plane;
     private Map<Vector3, Color> colorData;
-    private Color color;
+    private Color color1;
+    private Color color2;
 
-    public PlaneEntity(Vector3 normal, Vector3 point, Color color) {
-        this.color = color;
+    public PlaneEntity(Vector3 normal, Vector3 point, Color color1, Color color2) {
+        this.color1 = color1;
+        this.color2 = color2;
         plane = new Plane(normal, point);
         colorData = new HashMap<>();
     }
@@ -25,7 +27,7 @@ public class PlaneEntity extends AbstractEntity {
         Vector3 intersectionPoint = new Vector3(0, 0, 0);
         boolean intersects = Intersector.intersectRayPlane(ray, plane, intersectionPoint);
 
-        if (intersects && ray.origin.dst(intersectionPoint) > 100) {
+        if (intersects && ray.origin.dst(intersectionPoint) > 300) {
             return new IntersectionResult(false, null);
         }
 
@@ -46,9 +48,9 @@ public class PlaneEntity extends AbstractEntity {
     @Override
     public Color getColorAtPosition(Vector3 point) {
         if (Math.abs(point.x) % 10 > 5) {
-            return Color.LIGHT_GRAY;
+            return color1;
         } else {
-            return Color.DARK_GRAY;
+            return color2;
         }
 
     }
