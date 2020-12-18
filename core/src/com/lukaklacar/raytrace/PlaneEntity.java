@@ -36,7 +36,7 @@ public class PlaneEntity extends AbstractEntity {
 
     @Override
     public Ray bounce(Ray ray, Vector3 intersectionPoint) {
-        return new Ray(intersectionPoint, plane.normal.cpy().sub(ray.direction));
+        return new Ray(intersectionPoint, plane.normal.cpy().scl(2).sub(ray.direction));
 
     }
 

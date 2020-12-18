@@ -30,7 +30,7 @@ public class SphereEntity extends AbstractEntity {
 
     @Override
     public Ray bounce(Ray ray, Vector3 intersectionPoint) {
-        var normal2 = getNormal(intersectionPoint);
+        var normal2 = getNormal(intersectionPoint).scl(2);
         return new Ray(intersectionPoint, normal2.sub(ray.direction));
     }
 
