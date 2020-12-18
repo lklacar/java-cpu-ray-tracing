@@ -13,8 +13,10 @@ public class PlaneEntity extends AbstractEntity {
 
     private final Plane plane;
     private Map<Vector3, Color> colorData;
+    private Color color;
 
-    public PlaneEntity(Vector3 normal, Vector3 point) {
+    public PlaneEntity(Vector3 normal, Vector3 point, Color color) {
+        this.color = color;
         plane = new Plane(normal, point);
         colorData = new HashMap<>();
     }
@@ -38,11 +40,8 @@ public class PlaneEntity extends AbstractEntity {
 
     @Override
     public Color getColorAtPosition(Vector3 point) {
-        if (colorData.containsKey(point)) {
-            return colorData.get(point);
-        }
 
-        return Color.RED;
+        return color;
     }
 
     @Override

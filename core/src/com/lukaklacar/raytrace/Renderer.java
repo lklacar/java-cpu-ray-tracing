@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
 public class Renderer {
@@ -16,7 +15,6 @@ public class Renderer {
     private final Pixmap pixmap;
     private final Texture renderTexture;
     private static final int BOUNCE_COUNT = 2;
-    private final Vector3 rotationAxis = new Vector3(0, 1, 0);
 
     public Renderer(int width, int height, Level level) {
         this.width = width;
@@ -60,27 +58,23 @@ public class Renderer {
         var directionToLight = level.getLightSource().cpy().sub(intersection);
         var originalColor = entity.getColorAtPosition(intersection);
 
-        // Light calculation
-        var entityNormal = entity.getNormal(intersection);
-        var cosTheta = 1 - entityNormal.dot(directionToLight) / (entityNormal.len() * directionToLight.len());
-        var lightIntensityAtPoint = (float) Math.toDegrees(Math.acos(cosTheta)) / 90f;
+        var shadowRay = new Ray(intersection.cpy(), directionToLight);
+        var shadowResult = level.getIntersectedEntity(shadowRay);
+        if (shadowResult != null && shadowResult.getIntersectionEntity() instanceof SphereEntity) {
+            originalColor = Color.BLACK;
+        }
 
         if (bounce == 0) {
-            return new Color(
-                (originalColor.r * lightIntensityAtPoint),
-                (originalColor.g * lightIntensityAtPoint),
-                (originalColor.b * lightIntensityAtPoint),
-                1f
-            );
+            return originalColor;
         }
 
         var bounceRay = entity.bounce(ray, intersection);
         var bounceColor = castRay(bounceRay, bounce - 1);
 
         return new Color(
-            (originalColor.r * lightIntensityAtPoint) * 0.6f + bounceColor.r * 0.4f,
-            (originalColor.g * lightIntensityAtPoint) * 0.6f + bounceColor.r * 0.4f,
-            (originalColor.b * lightIntensityAtPoint) * 0.6f + bounceColor.r * 0.4f,
+            originalColor.r * 0.6f + bounceColor.r * 0.4f,
+            originalColor.g * 0.6f + bounceColor.g * 0.4f,
+            originalColor.b * 0.6f + bounceColor.b * 0.4f,
             1f
         );
     }

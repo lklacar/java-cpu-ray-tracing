@@ -13,8 +13,10 @@ public class SphereEntity extends AbstractEntity {
 
     private final Sphere sphere;
     private Map<Vector3, Color> colorData;
+    private Color color;
 
-    public SphereEntity(Vector3 center, float radius) {
+    public SphereEntity(Vector3 center, float radius, Color color) {
+        this.color = color;
         sphere = new Sphere(center, radius);
         colorData = new HashMap<>();
     }
@@ -39,11 +41,8 @@ public class SphereEntity extends AbstractEntity {
 
     @Override
     public Color getColorAtPosition(Vector3 point) {
-        if (colorData.containsKey(point)) {
-            return colorData.get(point);
-        }
 
-        return Color.RED;
+        return color;
     }
 
     @Override
