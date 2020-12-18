@@ -30,7 +30,7 @@ public class SphereEntity extends AbstractEntity {
 
     @Override
     public Ray bounce(Ray ray, Vector3 intersectionPoint) {
-        var normal2 = getNormal(intersectionPoint).scl(2);
+        var normal2 = getNormal(intersectionPoint);
         return new Ray(intersectionPoint, normal2.sub(ray.direction));
     }
 
@@ -48,5 +48,10 @@ public class SphereEntity extends AbstractEntity {
     @Override
     public void setColor(Vector3 position, Color color) {
         colorData.put(position, color);
+    }
+
+    @Override
+    public Vector3 getPosition() {
+        return sphere.center;
     }
 }

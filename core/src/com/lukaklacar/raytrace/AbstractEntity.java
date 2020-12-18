@@ -15,4 +15,6 @@ public abstract class AbstractEntity {
     public abstract Color getColorAtPosition(Vector3 point);
 
     public abstract void setColor(Vector3 position, Color color);
+
+    public abstract Vector3 getPosition();
 }

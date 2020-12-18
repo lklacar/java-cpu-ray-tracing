@@ -38,6 +38,11 @@ public class Level {
         return null;
     }
 
+    public void update() {
+        entities.get(0).getPosition().z -= 0.1f;
+        entities.get(1).getPosition().y += 0.1f;
+    }
+
     public Vector3 getLightSource() {
         return lightSource;
     }

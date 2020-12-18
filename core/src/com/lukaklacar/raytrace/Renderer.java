@@ -26,6 +26,7 @@ public class Renderer {
     }
 
     public void render(SpriteBatch spriteBatch) {
+        level.update();
         level.getCameraPosition().x += 0.1f;
         ray.origin.set(level.getCameraPosition());
 

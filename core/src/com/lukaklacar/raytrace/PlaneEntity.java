@@ -25,7 +25,7 @@ public class PlaneEntity extends AbstractEntity {
         Vector3 intersectionPoint = new Vector3(0, 0, 0);
         boolean intersects = Intersector.intersectRayPlane(ray, plane, intersectionPoint);
 
-        if(intersects && ray.origin.dst(intersectionPoint) > 100) {
+        if (intersects && ray.origin.dst(intersectionPoint) > 100) {
             return new IntersectionResult(false, null);
         }
 
@@ -34,7 +34,7 @@ public class PlaneEntity extends AbstractEntity {
 
     @Override
     public Ray bounce(Ray ray, Vector3 intersectionPoint) {
-        return new Ray(intersectionPoint, plane.normal.cpy().scl(2).sub(ray.direction));
+        return new Ray(intersectionPoint, plane.normal.cpy().sub(ray.direction));
 
     }
 
@@ -51,6 +51,11 @@ public class PlaneEntity extends AbstractEntity {
     @Override
     public void setColor(Vector3 position, Color color) {
         colorData.put(position, color);
+    }
+
+    @Override
+    public Vector3 getPosition() {
+        throw new UnsupportedOperationException();
     }
 
 }
