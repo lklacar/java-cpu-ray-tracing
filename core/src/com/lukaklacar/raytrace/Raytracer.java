@@ -7,13 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Raytracer extends ApplicationAdapter {
     private SpriteBatch batch;
-    private Level level;
     private Renderer renderer;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
-        level = new Level();
+        var level = new Level();
         renderer = new Renderer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), level);
     }
 

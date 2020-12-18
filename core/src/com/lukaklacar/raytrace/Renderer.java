@@ -14,94 +14,75 @@ public class Renderer {
     private final int height;
     private final Level level;
     private final Pixmap pixmap;
-    private final Vector3 rotationAxis = new Vector3(0, 1, 0);
-    private float currentCameraRotation = 0f;
     private final Texture renderTexture;
-    private static final int BOUNCE_COUNT = 1;
+    private static final int BOUNCE_COUNT = 2;
+    private final Vector3 rotationAxis = new Vector3(0, 1, 0);
 
     public Renderer(int width, int height, Level level) {
         this.width = width;
         this.height = height;
         this.level = level;
-        ray = new Ray(new Vector3(50, 0, 0), new Vector3(0, 0, 0));
+        ray = new Ray(level.getCameraPosition(), level.getCameraLookAt());
         pixmap = new Pixmap(width, height, Pixmap.Format.RGB888);
         renderTexture = new Texture(pixmap);
     }
 
     public void render(SpriteBatch spriteBatch) {
-        currentCameraRotation += 0.1f;
-
-        ((SphereEntity) level.getEntities().get(0)).getSphere().center.z -= 0.1f;
-        ((SphereEntity) level.getEntities().get(1)).getSphere().center.x -= 0.1f;
-
-        level.getLightSource().x++;
+        level.getCameraPosition().x += 0.1f;
+        ray.origin.set(level.getCameraPosition());
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                ray.direction.set(width / 2f - i, height / 2f - j, 500);
-                ray.direction.set(ray.direction.nor());
-                ray.direction.rotate(rotationAxis, currentCameraRotation);
+                ray.direction
+                    .set(level.getCameraLookAt().x + width / 2f - i,
+                        level.getCameraLookAt().y + height / 2f - j,
+                        level.getCameraLookAt().z)
+                    .nor();
 
-                var levelIntersectionResult = level.getIntersectedEntity(ray);
-
-                if (levelIntersectionResult != null) {
-                    var intersectedEntity = levelIntersectionResult.getIntersectionEntity();
-
-                    var bounceRay = intersectedEntity.bounce(ray, levelIntersectionResult.getIntersectionPoint());
-
-                    if (bounceRay != null) {
-                        var bounceLevelIntersectionResult = level.getIntersectedEntity(bounceRay);
-
-                        if (bounceLevelIntersectionResult != null) {
-                            var originalColor = levelIntersectionResult.getIntersectionEntity().getColor();
-                            var reflectionColor = bounceLevelIntersectionResult.getIntersectionEntity().getColor();
-                            var newColor = new Color(
-                                originalColor.r * 0.6f + reflectionColor.r * 0.4f,
-                                originalColor.g * 0.6f + reflectionColor.g * 0.4f,
-                                originalColor.b * 0.6f + reflectionColor.b * 0.4f,
-                                1f
-                            );
-                            pixmap.setColor(newColor);
-                        } else {
-                            if (levelIntersectionResult.getIntersectionEntity() instanceof SphereEntity) {
-                                var s = ((SphereEntity) levelIntersectionResult.getIntersectionEntity()).getSphere();
-                                var a = levelIntersectionResult.getIntersectionPoint().cpy().sub(s.center);
-                                var b = level.getLightSource().cpy()
-                                    .sub(levelIntersectionResult.getIntersectionPoint());
-
-                                var c = 1- a.dot(b) / (a.len() * b.len());
-                                var k = (float)Math.toDegrees(Math.acos(c)) / 90f;
-
-
-                                pixmap.setColor(
-                                    intersectedEntity.getColor().r * k,
-                                    intersectedEntity.getColor().g * k,
-                                    intersectedEntity.getColor().b * k,
-                                    1f
-                                               );
-
-                            } else {
-                                pixmap.setColor(intersectedEntity.getColor());
-                            }
-
-                        }
-                    } else {
-                        pixmap.setColor(intersectedEntity.getColor());
-                    }
-                } else {
-                    pixmap.setColor(Color.BLACK);
-                }
+                var pixelColor = castRay(ray, BOUNCE_COUNT);
+                pixmap.setColor(pixelColor);
 
                 pixmap.drawPixel(i, j);
-
             }
         }
         renderTexture.draw(pixmap, 0, 0);
         spriteBatch.draw(renderTexture, 0, 0);
     }
 
-    private Vector3 calculateBounce(Ray ray, Vector3 intersectionPoint) {
-        return null;
+    private Color castRay(Ray ray, int bounce) {
+        // Ray intersection
+        var result = level.getIntersectedEntity(ray);
+        if (result == null) {
+            return Color.BLACK;
+        }
+        var entity = result.getIntersectionEntity();
+        var intersection = result.getIntersectionPoint();
+        var directionToLight = level.getLightSource().cpy().sub(intersection);
+        var originalColor = entity.getColorAtPosition(intersection);
+
+        // Light calculation
+        var entityNormal = entity.getNormal(intersection);
+        var cosTheta = 1 - entityNormal.dot(directionToLight) / (entityNormal.len() * directionToLight.len());
+        var lightIntensityAtPoint = (float) Math.toDegrees(Math.acos(cosTheta)) / 90f;
+
+        if (bounce == 0) {
+            return new Color(
+                (originalColor.r * lightIntensityAtPoint),
+                (originalColor.g * lightIntensityAtPoint),
+                (originalColor.b * lightIntensityAtPoint),
+                1f
+            );
+        }
+
+        var bounceRay = entity.bounce(ray, intersection);
+        var bounceColor = castRay(bounceRay, bounce - 1);
+
+        return new Color(
+            (originalColor.r * lightIntensityAtPoint) * 0.6f + bounceColor.r * 0.4f,
+            (originalColor.g * lightIntensityAtPoint) * 0.6f + bounceColor.r * 0.4f,
+            (originalColor.b * lightIntensityAtPoint) * 0.6f + bounceColor.r * 0.4f,
+            1f
+        );
     }
 
 }
