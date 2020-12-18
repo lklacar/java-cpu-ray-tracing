@@ -18,6 +18,7 @@ public class Raytracer extends ApplicationAdapter {
 
     @Override
     public void render() {
+        Gdx.graphics.setTitle("FPS: " + Gdx.graphics.getFramesPerSecond());
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
