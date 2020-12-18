@@ -49,7 +49,6 @@ public class Renderer {
     }
 
     private Color castRay(Ray ray, int bounce) {
-        // Ray intersection
         var result = level.getIntersectedEntity(ray);
         if (result == null) {
             return Color.BLACK;

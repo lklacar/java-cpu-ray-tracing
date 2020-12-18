@@ -47,7 +47,7 @@ public class PlaneEntity extends AbstractEntity {
 
     @Override
     public Color getColorAtPosition(Vector3 point) {
-        if (Math.abs(point.x) % 10 > 5) {
+        if (Math.abs(point.x) % 10 > 5 && Math.abs(point.z) % 10 < 5) {
             return color1;
         } else {
             return color2;
