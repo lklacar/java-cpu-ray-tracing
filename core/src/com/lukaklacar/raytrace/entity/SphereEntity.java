@@ -1,8 +1,5 @@
 package com.lukaklacar.raytrace.entity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
@@ -13,13 +10,11 @@ import com.lukaklacar.raytrace.math.IntersectionResult;
 public class SphereEntity extends AbstractEntity {
 
     private final Sphere sphere;
-    private Map<Vector3, Color> colorData;
-    private Color color;
+    private final Color color;
 
     public SphereEntity(Vector3 center, float radius, Color color) {
         this.color = color;
         sphere = new Sphere(center, radius);
-        colorData = new HashMap<>();
     }
 
     @Override
@@ -44,11 +39,6 @@ public class SphereEntity extends AbstractEntity {
     public Color getColorAtPosition(Vector3 point) {
 
         return color;
-    }
-
-    @Override
-    public void setColor(Vector3 position, Color color) {
-        colorData.put(position, color);
     }
 
     @Override

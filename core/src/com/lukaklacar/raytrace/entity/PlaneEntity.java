@@ -1,8 +1,5 @@
 package com.lukaklacar.raytrace.entity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
@@ -13,15 +10,13 @@ import com.lukaklacar.raytrace.math.IntersectionResult;
 public class PlaneEntity extends AbstractEntity {
 
     private final Plane plane;
-    private Map<Vector3, Color> colorData;
-    private Color color1;
-    private Color color2;
+    private final Color color1;
+    private final Color color2;
 
     public PlaneEntity(Vector3 normal, Vector3 point, Color color1, Color color2) {
         this.color1 = color1;
         this.color2 = color2;
         plane = new Plane(normal, point);
-        colorData = new HashMap<>();
     }
 
     public IntersectionResult intersect(Ray ray) {
@@ -54,11 +49,6 @@ public class PlaneEntity extends AbstractEntity {
             return color2;
         }
 
-    }
-
-    @Override
-    public void setColor(Vector3 position, Color color) {
-        colorData.put(position, color);
     }
 
     @Override
