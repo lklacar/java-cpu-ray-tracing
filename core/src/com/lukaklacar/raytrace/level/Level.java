@@ -21,7 +21,7 @@ public class Level {
     public Level() {
         lightSource = new Vector3(100, 100, 50);
         cameraPosition = new Vector3(0, 10, -20);
-        cameraLookAt = new Vector3(0, 100, 1000);
+        cameraLookAt = new Vector3(0, 200, 1000);
 
         entities = Arrays.asList(
                 new SphereEntity(new Vector3(0, 10, 50), 10, Color.BLUE),
