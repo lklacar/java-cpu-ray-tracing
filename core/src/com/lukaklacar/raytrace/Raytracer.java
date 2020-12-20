@@ -10,12 +10,14 @@ import com.lukaklacar.raytrace.render.Renderer;
 public class Raytracer extends ApplicationAdapter {
     private SpriteBatch batch;
     private Renderer renderer;
+    private static final int THREAD_COUNT = 8;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         var level = new Level();
-        renderer = new Renderer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), level);
+        renderer = new Renderer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), level, THREAD_COUNT);
+        renderer.startRendererThreads();
     }
 
     @Override
